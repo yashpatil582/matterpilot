@@ -18,7 +18,8 @@
     "mcp": "tsx mcp/server.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "tenancy:check": "tsx scripts/check-tenancy.ts"
+    "tenancy:check": "tsx scripts/check-tenancy.ts",
+    "connectors:smoke": "tsx scripts/connectors-smoke.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
