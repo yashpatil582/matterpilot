@@ -80,6 +80,10 @@ if (devLoginEnabled) {
 
 export const authConfig: NextAuthConfig = {
   providers,
+  // Vercel auto-detects this in most cases, but Auth.js v5 beta's Credentials
+  // path occasionally trips MissingCSRF when the host header isn't trusted
+  // before the cookie is written. Pin it explicitly.
+  trustHost: true,
   session: { strategy: 'jwt' },
   pages: { signIn: '/sign-in' },
   callbacks: {

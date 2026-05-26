@@ -5,20 +5,18 @@
  * only when the corresponding env vars are set; the dev credentials form
  * appears when AUTH_DEV_LOGIN=true or in non-production environments. This
  * keeps the demo workable end-to-end without external OAuth setup.
+ *
+ * Dev credentials form is a client component (see DevCredentialsForm) because
+ * next-auth v5 beta's server-action signIn() path for Credentials hits
+ * MissingCSRF before the CSRF cookie is issued. The next-auth/react signIn
+ * helper does the GET /api/auth/csrf → POST /api/auth/callback dance with
+ * the right token + cookie, so the flow just works.
  */
 
 import { signIn, listConfiguredProviders } from '@/auth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-
-async function devSignIn(formData: FormData) {
-  'use server';
-  const email = String(formData.get('email') ?? '').trim();
-  const callbackUrl = String(formData.get('callbackUrl') ?? '/');
-  await signIn('dev', { email, redirectTo: callbackUrl });
-}
+import { DevCredentialsForm } from './dev-form';
 
 async function providerSignIn(formData: FormData) {
   'use server';
@@ -72,25 +70,7 @@ export default async function SignInPage({
                   </div>
                 </div>
               )}
-              <form action={devSignIn} className="space-y-3">
-                <input type="hidden" name="callbackUrl" value={callbackUrl} />
-                <div className="space-y-1">
-                  <Label htmlFor="email">Workspace member email</Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    placeholder="admin@matterpilot.dev"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Dev sign-in: any seeded workspace member. No password.
-                  </p>
-                </div>
-                <Button type="submit" className="w-full">
-                  Sign in
-                </Button>
-              </form>
+              <DevCredentialsForm callbackUrl={callbackUrl} />
             </>
           )}
 
