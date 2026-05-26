@@ -33,8 +33,12 @@ export default async function SignInPage({
   const params = await searchParams;
   const callbackUrl = params.callbackUrl ?? '/';
   const providers = listConfiguredProviders();
-  const oidc = providers.filter((p) => p.id !== 'dev');
-  const hasDev = providers.some((p) => p.id === 'dev');
+  // The Credentials provider keeps its default id `credentials` even when we
+  // try to override it (Auth.js v5 beta quirk). Filter on that string so the
+  // dev form takes the client-side signIn path and OIDC providers stay on the
+  // server-action path.
+  const oidc = providers.filter((p) => p.id !== 'credentials');
+  const hasDev = providers.some((p) => p.id === 'credentials');
 
   return (
     <div className="flex min-h-screen items-center justify-center px-6 py-12">

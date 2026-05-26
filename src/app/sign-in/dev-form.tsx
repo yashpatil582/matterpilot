@@ -27,7 +27,7 @@ export function DevCredentialsForm({ callbackUrl }: { callbackUrl: string }) {
     setPending(true);
     setError(null);
     try {
-      const result = await signIn('dev', {
+      const result = await signIn('credentials', {
         email: email.trim(),
         redirect: false,
         callbackUrl,

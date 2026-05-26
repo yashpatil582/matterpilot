@@ -52,7 +52,10 @@ if (process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET) {
 if (devLoginEnabled) {
   providers.push(
     Credentials({
-      id: 'dev',
+      // Auth.js v5 beta ignores `id` overrides on Credentials — the provider
+      // keeps its default id `credentials`. Calling code references it by
+      // that id (signIn('credentials', ...)) and the sign-in page filters
+      // on it to pick the right form path.
       name: 'Dev login',
       credentials: {
         email: { label: 'Email', type: 'email', placeholder: 'admin@matterpilot.dev' },
