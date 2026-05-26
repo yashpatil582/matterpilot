@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:full": "tsx scripts/build-addins.ts && next build",
+    "addins:build": "tsx scripts/build-addins.ts",
     "start": "next start",
     "lint": "eslint",
     "db:generate": "drizzle-kit generate",

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>MatterPilot — Word</title>
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <style>
+      :root {
+        --mp-fg: #18181b;
+        --mp-muted: #71717a;
+        --mp-border: #e4e4e7;
+        --mp-accent: #2563eb;
+        --mp-bg: #ffffff;
+        --mp-amber-bg: #fef3c7;
+        --mp-amber-fg: #92400e;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --mp-fg: #fafafa;
+          --mp-muted: #a1a1aa;
+          --mp-border: #27272a;
+          --mp-accent: #60a5fa;
+          --mp-bg: #09090b;
+          --mp-amber-bg: #422006;
+          --mp-amber-fg: #fde68a;
+        }
+      }
+      html, body { margin: 0; padding: 0; height: 100%; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                     "Helvetica Neue", Arial, sans-serif;
+        background: var(--mp-bg);
+        color: var(--mp-fg);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  MatterPilot Word add-in manifest.
+
+  Sideload steps (Word desktop):
+    Insert → Add-ins → Upload My Add-in… → pick this file. Word will fetch
+    the task pane URL from SourceLocation below; that URL must serve over
+    HTTPS at the production deployment.
+
+  Replace https://matterpilot-demo.vercel.app with your own Vercel URL if
+  you are running a fork. The path /addins/word/taskpane.html is served by
+  the Next.js app via the rewrite in next.config.ts.
+
+  Replace the Id with a fresh GUID before publishing — every distinct
+  add-in install needs its own unique Id.
+-->
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+  xsi:type="TaskPaneApp">
+
+  <Id>22222222-3333-4444-5555-666666666666</Id>
+  <Version>0.1.0.0</Version>
+  <ProviderName>MatterPilot (FDE demo)</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="MatterPilot" />
+  <Description DefaultValue="MatterPilot — apply your firm's playbook to a contract with tracked changes." />
+  <IconUrl DefaultValue="https://matterpilot-demo.vercel.app/addins/icon-64.png" />
+  <HighResolutionIconUrl DefaultValue="https://matterpilot-demo.vercel.app/addins/icon-128.png" />
+  <SupportUrl DefaultValue="https://matterpilot-demo.vercel.app/sign-in" />
+
+  <AppDomains>
+    <AppDomain>https://matterpilot-demo.vercel.app</AppDomain>
+  </AppDomains>
+
+  <Hosts>
+    <Host Name="Document" />
+  </Hosts>
+
+  <Requirements>
+    <Sets DefaultMinVersion="1.3">
+      <Set Name="WordApi" MinVersion="1.3" />
+    </Sets>
+  </Requirements>
+
+  <DefaultSettings>
+    <SourceLocation DefaultValue="https://matterpilot-demo.vercel.app/addins/word/taskpane.html" />
+  </DefaultSettings>
+
+  <Permissions>ReadWriteDocument</Permissions>
+
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <Hosts>
+      <Host xsi:type="Document">
+        <DesktopFormFactor>
+          <ExtensionPoint xsi:type="PrimaryCommandSurface">
+            <OfficeTab id="TabHome">
+              <Group id="mpReviewGroup">
+                <Label resid="groupLabel" />
+                <Icon>
+                  <bt:Image size="16" resid="icon-16" />
+                  <bt:Image size="32" resid="icon-32" />
+                  <bt:Image size="80" resid="icon-80" />
+                </Icon>
+                <Control xsi:type="Button" id="mpReviewOpenPane">
+                  <Label resid="openPaneButton.label" />
+                  <Supertip>
+                    <Title resid="openPaneButton.title" />
+                    <Description resid="openPaneButton.tip" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="icon-16" />
+                    <bt:Image size="32" resid="icon-32" />
+                    <bt:Image size="80" resid="icon-80" />
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>mpReviewTaskpane</TaskpaneId>
+                    <SourceLocation resid="taskpane.url" />
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+    <Resources>
+      <bt:Images>
+        <bt:Image id="icon-16" DefaultValue="https://matterpilot-demo.vercel.app/addins/icon-16.png" />
+        <bt:Image id="icon-32" DefaultValue="https://matterpilot-demo.vercel.app/addins/icon-32.png" />
+        <bt:Image id="icon-80" DefaultValue="https://matterpilot-demo.vercel.app/addins/icon-80.png" />
+      </bt:Images>
+      <bt:Urls>
+        <bt:Url id="taskpane.url" DefaultValue="https://matterpilot-demo.vercel.app/addins/word/taskpane.html" />
+      </bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="groupLabel" DefaultValue="MatterPilot" />
+        <bt:String id="openPaneButton.label" DefaultValue="Open MatterPilot" />
+        <bt:String id="openPaneButton.title" DefaultValue="MatterPilot" />
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="openPaneButton.tip" DefaultValue="Apply your firm's playbook to the open contract with tracked changes." />
+      </bt:LongStrings>
+    </Resources>
+  </VersionOverrides>
+</OfficeApp>
