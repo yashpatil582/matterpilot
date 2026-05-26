@@ -1,0 +1,49 @@
+MUTUAL NON-DISCLOSURE AGREEMENT
+
+This Mutual Non-Disclosure Agreement ("Agreement") is entered into as of January 15, 2026 (the "Effective Date"), by and between Acme Software, Inc., a Delaware corporation with offices at 100 Main Street, San Francisco, California ("Acme"), and Beacon Industries LLC, a New York limited liability company with offices at 250 Park Avenue, New York, New York ("Beacon"). Acme and Beacon are each referred to as a "Party" and collectively as the "Parties."
+
+1. PURPOSE
+
+The Parties wish to evaluate a potential business relationship and, in connection with such evaluation, may disclose to each other certain confidential or proprietary information.
+
+2. CONFIDENTIAL INFORMATION
+
+"Confidential Information" means any information disclosed by one Party (the "Disclosing Party") to the other Party (the "Receiving Party") that is identified as confidential at the time of disclosure or that, given the nature of the information and the circumstances surrounding its disclosure, would reasonably be understood to be confidential. Confidential Information includes, without limitation, business plans, technical data, customer lists, product roadmaps, financial information, and source code.
+
+3. OBLIGATIONS
+
+Each party agrees to hold the other party's Confidential Information in strict confidence and to use the same degree of care to prevent its unauthorized disclosure as it uses to protect its own confidential information, but in no event less than reasonable care. Each Party shall use Confidential Information solely for the Purpose set forth in Section 1 and shall not disclose Confidential Information to any third party without the prior written consent of the Disclosing Party, except to its employees, officers, directors, agents, and professional advisors who have a need to know and who are bound by confidentiality obligations no less restrictive than those set forth herein.
+
+4. EXCLUSIONS
+
+Confidential Information does not include information that: (a) is or becomes publicly available without breach of this Agreement; (b) was lawfully known to the Receiving Party prior to disclosure; (c) is independently developed by the Receiving Party without use of or reference to Confidential Information; or (d) is rightfully received from a third party without obligation of confidentiality.
+
+5. TERM
+
+Confidentiality obligations shall survive for three (3) years after termination of this Agreement.
+
+6. NO RIGHTS GRANTED
+
+Nothing in this Agreement transfers ownership or grants any license to either party's intellectual property. All Confidential Information remains the property of the Disclosing Party.
+
+7. GOVERNING LAW
+
+This Agreement shall be governed by the laws of the State of New York, without regard to its conflict of laws principles.
+
+8. ENTIRE AGREEMENT
+
+This Agreement constitutes the entire agreement between the Parties with respect to the subject matter hereof and supersedes all prior or contemporaneous communications.
+
+IN WITNESS WHEREOF, the Parties have executed this Mutual Non-Disclosure Agreement as of the Effective Date.
+
+ACME SOFTWARE, INC.
+
+By: ___________________________
+Name: Jane Smith
+Title: General Counsel
+
+BEACON INDUSTRIES LLC
+
+By: ___________________________
+Name: Robert Johnson
+Title: Chief Operating Officer

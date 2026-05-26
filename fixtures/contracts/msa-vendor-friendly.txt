@@ -1,0 +1,52 @@
+MASTER SERVICES AGREEMENT
+
+This Master Services Agreement ("Agreement") is made effective as of March 1, 2026 between Vortex Cloud Services, Inc., a Texas corporation ("Vendor"), and the customer identified on the applicable Statement of Work ("Client").
+
+1. SERVICES
+
+Vendor shall provide professional and technical services to Client as described in one or more Statements of Work executed under this Agreement (each, an "SOW"). Each SOW shall be governed by the terms of this Agreement.
+
+2. FEES AND PAYMENT
+
+Client shall pay all fees set forth in each SOW. Invoices shall be due and payable within sixty (60) days of receipt. Any past-due amounts shall accrue interest at the rate of 1.5% per month or the highest rate permitted by law, whichever is lower. Client shall pay all out-of-pocket expenses, including travel, lodging, and meals, incurred by Vendor in connection with the Services, without prior approval.
+
+3. TERM AND TERMINATION
+
+The initial term of this Agreement shall be three (3) years from the Effective Date and shall automatically renew for successive one-year terms unless either party provides written notice of non-renewal at least one hundred eighty (180) days prior to the end of the then-current term. This Agreement may not be terminated for convenience by either party during the initial term. Either party may terminate this Agreement for material breach if the breaching party fails to cure such breach within sixty (60) days of written notice.
+
+4. LIMITATION OF LIABILITY
+
+To the maximum extent permitted by law, Vendor's total liability under this Agreement shall be unlimited with respect to (a) Vendor's indemnification obligations under Section 5, (b) breaches of confidentiality, and (c) Vendor's gross negligence or willful misconduct. In no event shall Client's liability be capped or limited in any way. Each party waives any limitation of liability to the fullest extent permitted by applicable law.
+
+5. INDEMNIFICATION
+
+Client shall indemnify and hold harmless Vendor for any and all claims, damages, losses, costs, and expenses (including reasonable attorneys' fees) arising out of or related to (a) Client's use of the Services, (b) Client's data, (c) Client's breach of this Agreement, or (d) any third-party claim brought against Vendor in connection with the Services. Vendor shall have no obligation to indemnify Client for any claim arising out of the Services.
+
+6. INTELLECTUAL PROPERTY
+
+All deliverables, work product, and intellectual property created by Vendor under this Agreement shall be the sole and exclusive property of Vendor. Client receives a non-exclusive, non-transferable, revocable license to use such deliverables solely for Client's internal business purposes during the term of the applicable SOW. Upon termination of the SOW, all such licenses shall immediately terminate and Client shall destroy all copies of the deliverables.
+
+7. CONFIDENTIALITY
+
+Each party shall maintain the confidentiality of the other party's confidential information. Vendor's pricing, methodologies, processes, and any feedback provided by Client to Vendor shall be deemed Vendor's confidential information and may be used by Vendor without restriction.
+
+8. GOVERNING LAW AND JURISDICTION
+
+This Agreement shall be governed by the laws of the State of Texas, without regard to its conflict of laws principles. Any disputes shall be resolved exclusively in the state or federal courts located in Harris County, Texas. Client waives any objection to such venue.
+
+9. GENERAL
+
+This Agreement constitutes the entire agreement of the parties with respect to its subject matter. No modifications shall be binding unless in writing and signed by both parties. Client may not assign this Agreement without Vendor's prior written consent; Vendor may assign this Agreement without restriction.
+
+VENDOR: Vortex Cloud Services, Inc.
+
+By: ___________________________
+Name: Marcus Reed
+Title: VP, Sales
+
+CLIENT: ___________________________
+
+By: ___________________________
+Name:
+Title:
+Date:

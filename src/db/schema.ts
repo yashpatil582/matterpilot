@@ -38,6 +38,27 @@ export const memberRoleEnum = pgEnum('member_role', ['paralegal', 'attorney', 'a
 export const retentionPolicyEnum = pgEnum('retention_policy', ['30d', '90d', '1y', '7y', 'forever']);
 export const matterStatusEnum = pgEnum('matter_status', ['open', 'on_hold', 'closed']);
 
+export const clauseTypeEnum = pgEnum('clause_type', [
+  'confidentiality',
+  'term',
+  'indemnity',
+  'limitation_of_liability',
+  'governing_law',
+  'termination',
+  'ip_assignment',
+  'non_compete',
+  'data_protection',
+  'payment_terms',
+  'other',
+]);
+export const riskLevelEnum = pgEnum('risk_level', ['low', 'medium', 'high']);
+export const reviewStatusEnum = pgEnum('review_status', [
+  'analyzing',
+  'needs_review',
+  'auto_approved',
+  'rejected',
+]);
+
 export const workspaces = pgTable('workspaces', {
   id: uuid('id').defaultRandom().primaryKey(),
   slug: text('slug').notNull().unique(),
@@ -76,11 +97,42 @@ export const documents = pgTable(
     bytes: integer('bytes'),
     legalHold: boolean('legal_hold').notNull().default(false),
     retentionPolicy: retentionPolicyEnum('retention_policy'),
+    playbookId: text('playbook_id'),
+    reviewStatus: reviewStatusEnum('review_status'),
+    flaggedClauseCount: integer('flagged_clause_count'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   },
   (t) => [
     index('documents_workspace_idx').on(t.workspaceId),
     index('documents_matter_idx').on(t.matterId),
+  ],
+);
+
+export const contractClauses = pgTable(
+  'contract_clauses',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    workspaceId: uuid('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }),
+    matterId: uuid('matter_id').references(() => matters.id, { onDelete: 'set null' }),
+    documentId: uuid('document_id')
+      .references(() => documents.id, { onDelete: 'cascade' })
+      .notNull(),
+    ordinal: integer('ordinal').notNull(),
+    clauseType: clauseTypeEnum('clause_type').notNull(),
+    text: text('text').notNull(),
+    startOffset: integer('start_offset'),
+    endOffset: integer('end_offset'),
+    confidence: real('confidence'),
+    riskLevel: riskLevelEnum('risk_level').notNull(),
+    matchedPlaybookRuleId: text('matched_playbook_rule_id'),
+    redlineSuggestion: text('redline_suggestion'),
+    reasoning: text('reasoning'),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [
+    index('contract_clauses_workspace_idx').on(t.workspaceId),
+    index('contract_clauses_document_idx').on(t.documentId),
+    index('contract_clauses_risk_idx').on(t.riskLevel),
   ],
 );
 
@@ -240,6 +292,8 @@ export type Matter = typeof matters.$inferSelect;
 export type NewMatter = typeof matters.$inferInsert;
 export type Document = typeof documents.$inferSelect;
 export type NewDocument = typeof documents.$inferInsert;
+export type ContractClause = typeof contractClauses.$inferSelect;
+export type NewContractClause = typeof contractClauses.$inferInsert;
 export type Case = typeof cases.$inferSelect;
 export type NewCase = typeof cases.$inferInsert;
 export type Notice = typeof notices.$inferSelect;
