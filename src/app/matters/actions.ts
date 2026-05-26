@@ -165,5 +165,73 @@ export async function askMatter(
   return { ...result, query };
 }
 
+export async function removeLinkedDocument(formData: FormData) {
+  const ctx = await requireRole(['admin', 'attorney', 'paralegal']);
+  const matterId = String(formData.get('matterId') ?? '');
+  const documentId = String(formData.get('documentId') ?? '');
+  if (!matterId || !documentId) return;
+
+  // Verify the document belongs to a matter in this workspace before touching
+  // it. Contracts are managed via the Pack 2 review surface, so this action
+  // refuses to delete `kind='contract'` rows — keeps the destructive surface
+  // tight and predictable.
+  const [doc] = await db
+    .select({
+      id: schema.documents.id,
+      kind: schema.documents.kind,
+      name: schema.documents.name,
+      sourceConnector: schema.documents.sourceConnector,
+    })
+    .from(schema.documents)
+    .where(
+      and(
+        eq(schema.documents.id, documentId),
+        eq(schema.documents.workspaceId, ctx.workspaceId),
+        eq(schema.documents.matterId, matterId),
+      ),
+    )
+    .limit(1);
+  if (!doc) throw new Error('Document not found on this matter');
+  if (doc.kind === 'contract') {
+    throw new Error('Contract documents are managed via the contract review surface');
+  }
+
+  // Drop any RAG chunks first — FK cascade also handles this, but doing it
+  // explicitly lets us audit the chunk count we discarded.
+  await db
+    .delete(schema.documentChunks)
+    .where(
+      and(
+        eq(schema.documentChunks.documentId, documentId),
+        eq(schema.documentChunks.workspaceId, ctx.workspaceId),
+      ),
+    );
+
+  await db
+    .delete(schema.documents)
+    .where(
+      and(
+        eq(schema.documents.id, documentId),
+        eq(schema.documents.workspaceId, ctx.workspaceId),
+      ),
+    );
+
+  await writeAudit({
+    workspaceId: ctx.workspaceId,
+    entityId: matterId,
+    actor: ctx.userEmail,
+    action: 'document_removed',
+    before: {
+      documentId,
+      name: doc.name,
+      kind: doc.kind,
+      sourceConnector: doc.sourceConnector,
+    },
+    after: {},
+  });
+
+  revalidatePath(`/matters/${matterId}`);
+}
+
 // Re-export the ctx require for use by other matter-bound server actions.
 export { requireWorkspaceCtx };

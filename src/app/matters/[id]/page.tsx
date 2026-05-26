@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/table';
 import { db, schema } from '@/db';
 import { requireWorkspaceCtx } from '@/lib/workspace/context';
-import { setLegalHold, setRetentionPolicy } from '../actions';
+import { removeLinkedDocument, setLegalHold, setRetentionPolicy } from '../actions';
 import { AskMatterCard } from './ask-matter-card';
 
 export const dynamic = 'force-dynamic';
@@ -437,6 +437,7 @@ export default async function MatterDetailPage({
                   <TableHead>Source</TableHead>
                   <TableHead className="text-right">Bytes</TableHead>
                   <TableHead className="text-right">Pulled</TableHead>
+                  <TableHead className="text-right">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -458,6 +459,20 @@ export default async function MatterDetailPage({
                         day: 'numeric',
                         year: 'numeric',
                       })}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <form action={removeLinkedDocument}>
+                        <input type="hidden" name="matterId" value={matter.id} />
+                        <input type="hidden" name="documentId" value={d.id} />
+                        <Button
+                          type="submit"
+                          size="sm"
+                          variant="ghost"
+                          className="text-destructive hover:text-destructive"
+                        >
+                          Remove
+                        </Button>
+                      </form>
                     </TableCell>
                   </TableRow>
                 ))}
