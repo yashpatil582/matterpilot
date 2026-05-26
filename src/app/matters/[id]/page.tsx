@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { and, desc, eq, inArray } from 'drizzle-orm';
+import { and, desc, eq, inArray, ne } from 'drizzle-orm';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -81,6 +81,30 @@ async function loadTasks(workspaceId: string, matterId: string) {
     .limit(50);
 }
 
+async function loadLinkedDocuments(workspaceId: string, matterId: string) {
+  return db
+    .select({
+      id: schema.documents.id,
+      name: schema.documents.name,
+      kind: schema.documents.kind,
+      sourceConnector: schema.documents.sourceConnector,
+      sourceRef: schema.documents.sourceRef,
+      mimeType: schema.documents.mimeType,
+      bytes: schema.documents.bytes,
+      createdAt: schema.documents.createdAt,
+    })
+    .from(schema.documents)
+    .where(
+      and(
+        eq(schema.documents.matterId, matterId),
+        eq(schema.documents.workspaceId, workspaceId),
+        ne(schema.documents.kind, 'contract'),
+      ),
+    )
+    .orderBy(desc(schema.documents.createdAt))
+    .limit(50);
+}
+
 async function loadContracts(workspaceId: string, matterId: string) {
   return db
     .select({
@@ -148,10 +172,11 @@ export default async function MatterDetailPage({
   const matter = await loadMatter(ctx.workspaceId, id);
   if (!matter) notFound();
 
-  const [notices, tasks, contracts] = await Promise.all([
+  const [notices, tasks, contracts, linkedDocuments] = await Promise.all([
     loadNotices(ctx.workspaceId, matter.id),
     loadTasks(ctx.workspaceId, matter.id),
     loadContracts(ctx.workspaceId, matter.id),
+    loadLinkedDocuments(ctx.workspaceId, matter.id),
   ]);
   const audit = await loadAuditTrail(
     ctx.workspaceId,
@@ -375,6 +400,60 @@ export default async function MatterDetailPage({
                     </TableCell>
                     <TableCell className="text-right text-xs text-muted-foreground">
                       {new Date(c.createdAt).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">
+            Linked documents{' '}
+            <span className="text-xs text-muted-foreground">
+              ({linkedDocuments.length})
+            </span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {linkedDocuments.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              Nothing pulled in yet. Browse external vaults or file from
+              Outlook to attach documents to this matter.
+            </p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Kind</TableHead>
+                  <TableHead>Source</TableHead>
+                  <TableHead className="text-right">Bytes</TableHead>
+                  <TableHead className="text-right">Pulled</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {linkedDocuments.map((d) => (
+                  <TableRow key={d.id}>
+                    <TableCell className="text-sm">{d.name ?? 'Untitled'}</TableCell>
+                    <TableCell className="text-xs font-mono text-muted-foreground capitalize">
+                      {d.kind.replace(/_/g, ' ')}
+                    </TableCell>
+                    <TableCell className="text-xs font-mono">
+                      {d.sourceConnector ?? '—'}
+                    </TableCell>
+                    <TableCell className="text-right text-xs font-mono">
+                      {d.bytes != null ? d.bytes.toLocaleString() : '—'}
+                    </TableCell>
+                    <TableCell className="text-right text-xs text-muted-foreground">
+                      {new Date(d.createdAt).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric',
                         year: 'numeric',
