@@ -310,11 +310,18 @@ export default async function MatterDetailPage({
             Contracts{' '}
             <span className="text-xs text-muted-foreground">({contracts.length})</span>
           </CardTitle>
-          <Link href={`/matters/${matter.id}/contracts/new`}>
-            <Button size="sm" variant="outline">
-              Review a contract
-            </Button>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link href={`/matters/${matter.id}/browse`}>
+              <Button size="sm" variant="ghost">
+                Browse external vaults
+              </Button>
+            </Link>
+            <Link href={`/matters/${matter.id}/contracts/new`}>
+              <Button size="sm" variant="outline">
+                Review a contract
+              </Button>
+            </Link>
+          </div>
         </CardHeader>
         <CardContent>
           {contracts.length === 0 ? (
