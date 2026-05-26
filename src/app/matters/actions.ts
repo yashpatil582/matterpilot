@@ -10,6 +10,19 @@ import { requireRole, requireWorkspaceCtx } from '@/lib/workspace/context';
 const RETENTION_VALUES = new Set(['30d', '90d', '1y', '7y', 'forever']);
 type RetentionPolicy = '30d' | '90d' | '1y' | '7y' | 'forever';
 
+function readActionFormValue(formData: FormData, name: string): string {
+  const direct = formData.get(name);
+  if (typeof direct === 'string') return direct;
+
+  for (const [key, value] of formData.entries()) {
+    if (key.endsWith(`_${name}`) && typeof value === 'string') {
+      return value;
+    }
+  }
+
+  return '';
+}
+
 async function writeAudit(args: {
   workspaceId: string;
   entityId: string;
@@ -167,8 +180,8 @@ export async function askMatter(
 
 export async function removeLinkedDocument(formData: FormData) {
   const ctx = await requireRole(['admin', 'attorney', 'paralegal']);
-  const matterId = String(formData.get('matterId') ?? '');
-  const documentId = String(formData.get('documentId') ?? '');
+  const matterId = readActionFormValue(formData, 'matterId');
+  const documentId = readActionFormValue(formData, 'documentId');
   if (!matterId || !documentId) return;
 
   // Verify the document belongs to a matter in this workspace before touching
