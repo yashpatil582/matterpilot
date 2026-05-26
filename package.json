@@ -17,6 +17,7 @@
     "db:seed": "tsx scripts/seed.ts",
     "db:reset": "tsx scripts/db-reset.ts",
     "e2e": "tsx scripts/e2e-upload.ts",
+    "e2e:matterpilot": "tsx scripts/e2e-matterpilot.ts",
     "eval": "tsx eval/run-eval.ts",
     "mcp": "tsx mcp/server.ts",
     "test": "vitest run",
