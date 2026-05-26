@@ -12,15 +12,57 @@ import { runTool } from '@/lib/llm';
 import { CLAUSE_TYPE_VALUES, RISK_LEVEL_VALUES } from './schema';
 import type { Playbook } from './playbooks';
 
+// Map common variants the model produces back to the canonical enum value.
+// Groq enforces strict enum validation server-side before we ever see the
+// response, so we relax the tool schema to plain string and normalise here.
+const CLAUSE_TYPE_ALIASES: Record<string, (typeof CLAUSE_TYPE_VALUES)[number]> = {
+  indemnification: 'indemnity',
+  indemnities: 'indemnity',
+  limitation: 'limitation_of_liability',
+  liability: 'limitation_of_liability',
+  'limit of liability': 'limitation_of_liability',
+  'governing law and jurisdiction': 'governing_law',
+  jurisdiction: 'governing_law',
+  'intellectual property': 'ip_assignment',
+  ip: 'ip_assignment',
+  noncompete: 'non_compete',
+  'non-compete': 'non_compete',
+  'data privacy': 'data_protection',
+  privacy: 'data_protection',
+  payment: 'payment_terms',
+  fees: 'payment_terms',
+  'fees and payment': 'payment_terms',
+};
+
+const ClauseTypeSchema = z.preprocess(
+  (v) => {
+    if (typeof v !== 'string') return v;
+    const lower = v.toLowerCase().trim();
+    if ((CLAUSE_TYPE_VALUES as readonly string[]).includes(lower)) return lower;
+    return CLAUSE_TYPE_ALIASES[lower] ?? 'other';
+  },
+  z.enum(CLAUSE_TYPE_VALUES),
+);
+
+const RiskLevelSchema = z.preprocess(
+  (v) => {
+    if (typeof v !== 'string') return v;
+    const lower = v.toLowerCase().trim();
+    if ((RISK_LEVEL_VALUES as readonly string[]).includes(lower)) return lower;
+    return 'medium';
+  },
+  z.enum(RISK_LEVEL_VALUES),
+);
+
 export const ExtractedClauseSchema = z.object({
   ordinal: z.number().int().min(0),
-  clauseType: z.enum(CLAUSE_TYPE_VALUES),
+  clauseType: ClauseTypeSchema,
   text: z.string().min(1),
   startCharIndex: z.number().int().nullable(),
   endCharIndex: z.number().int().nullable(),
   confidence: z.number().min(0).max(1),
   matchedPlaybookRuleId: z.string().nullable(),
-  riskLevel: z.enum(RISK_LEVEL_VALUES),
+  riskLevel: RiskLevelSchema,
   redlineSuggestion: z.string().nullable(),
   reasoning: z.string().min(1),
 });
@@ -54,8 +96,12 @@ const TOOL = {
             },
             clauseType: {
               type: 'string',
-              enum: CLAUSE_TYPE_VALUES,
-              description: 'The clause type this clause is classified as.',
+              // Groq enforces strict enum validation server-side; the
+              // model occasionally returns linguistic variants
+              // (e.g. "indemnification" instead of "indemnity") which
+              // would fail the call entirely. We accept any string here
+              // and normalise on the Zod side via CLAUSE_TYPE_ALIASES.
+              description: `The clause type. Use EXACTLY one of: ${CLAUSE_TYPE_VALUES.join(', ')}.`,
             },
             text: {
               type: 'string',
@@ -85,9 +131,10 @@ const TOOL = {
             },
             riskLevel: {
               type: 'string',
-              enum: RISK_LEVEL_VALUES,
-              description:
-                'Risk classification: high if the clause materially violates the playbook, medium if it deviates with negotiable impact, low if it is acceptable.',
+              // Same reason as clauseType: enum is enforced strictly by
+              // Groq; we accept any string and normalise to one of the
+              // canonical values via RiskLevelSchema.
+              description: `Risk: ${RISK_LEVEL_VALUES.join(' | ')}. Use high if the clause materially violates the playbook, medium if it deviates with negotiable impact, low if it is acceptable.`,
             },
             redlineSuggestion: {
               type: ['string', 'null'],
