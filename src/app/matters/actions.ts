@@ -191,7 +191,10 @@ export async function removeLinkedDocument(formData: FormData) {
       ),
     )
     .limit(1);
-  if (!doc) throw new Error('Document not found on this matter');
+  if (!doc) {
+    revalidatePath(`/matters/${matterId}`);
+    redirect(`/matters/${matterId}`);
+  }
   if (doc.kind === 'contract') {
     throw new Error('Contract documents are managed via the contract review surface');
   }
@@ -231,6 +234,7 @@ export async function removeLinkedDocument(formData: FormData) {
   });
 
   revalidatePath(`/matters/${matterId}`);
+  redirect(`/matters/${matterId}`);
 }
 
 // Re-export the ctx require for use by other matter-bound server actions.
