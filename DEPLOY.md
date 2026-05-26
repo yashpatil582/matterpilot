@@ -38,6 +38,19 @@ vercel env add REVIEW_CONFIDENCE_THRESHOLD production    # value: 0.75
 vercel env add LLM_PROVIDER production                   # value: groq
 vercel env add LLM_MODEL_CLASSIFY production             # value: llama-3.3-70b-versatile
 vercel env add LLM_MODEL_EXTRACT production              # value: llama-3.3-70b-versatile
+
+# Auth.js v5 — required
+vercel env add AUTH_SECRET production                    # openssl rand -base64 32
+
+# OIDC providers — optional, register only the ones you intend to use
+vercel env add AUTH_MICROSOFT_ENTRA_ID production
+vercel env add AUTH_MICROSOFT_ENTRA_SECRET production
+vercel env add AUTH_GOOGLE_ID production
+vercel env add AUTH_GOOGLE_SECRET production
+
+# Dev credentials login — set to 'true' ONLY for a demo environment.
+# Leave unset in real production deployments.
+vercel env add AUTH_DEV_LOGIN production                 # value: true (demo only)
 ```
 
 You can also paste them in via the Vercel dashboard (Project → Settings → Environment Variables) — same effect.

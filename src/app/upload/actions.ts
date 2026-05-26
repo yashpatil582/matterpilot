@@ -4,11 +4,15 @@ import { put } from '@vercel/blob';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { extractPdfText } from '@/lib/parsing';
-import { ingestNotice } from '@/lib/notice-pipeline/run';
+import { runWorkflow } from '@/lib/workflow/engine';
+import { courtNoticePack } from '@/lib/packs/court-notice';
+import { requireWorkspaceCtx, toPackContext } from '@/lib/workspace/context';
 
 export type UploadResult = { ok: false; error: string };
 
 export async function uploadNotice(_prev: UploadResult | null, formData: FormData): Promise<UploadResult> {
+  const ctx = await requireWorkspaceCtx();
+
   const file = formData.get('file');
   if (!(file instanceof File) || file.size === 0) {
     return { ok: false, error: 'Select a PDF to upload.' };
@@ -30,7 +34,7 @@ export async function uploadNotice(_prev: UploadResult | null, formData: FormDat
 
     const { text } = await extractPdfText(buffer);
 
-    await ingestNotice({
+    await runWorkflow(courtNoticePack, {
       text,
       rawFileUrl: blob.url,
       // Forwarded-email PDFs carry the original sender in a "From:" header
@@ -38,7 +42,7 @@ export async function uploadNotice(_prev: UploadResult | null, formData: FormDat
       // feed it to the deterministic sender allowlist; otherwise leave null
       // and let the link-host check carry the trust signal.
       senderEmail: extractFromHeader(text),
-    });
+    }, toPackContext(ctx));
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error during upload';
     console.error('Upload failed:', err);

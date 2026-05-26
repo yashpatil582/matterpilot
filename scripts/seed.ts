@@ -22,6 +22,12 @@ const DEFAULT_WORKSPACE_ID = '00000000-0000-0000-0000-000000000001';
 const DEFAULT_WORKSPACE_SLUG = 'default';
 const DEFAULT_WORKSPACE_NAME = 'Default Workspace';
 
+const DEV_MEMBERS = [
+  { email: 'admin@matterpilot.dev', name: 'Demo Admin', role: 'admin' as const },
+  { email: 'attorney@matterpilot.dev', name: 'Demo Attorney', role: 'attorney' as const },
+  { email: 'paralegal@matterpilot.dev', name: 'Demo Paralegal', role: 'paralegal' as const },
+];
+
 const ALLOW = [
   { domain: 'uscourts.gov', notes: 'U.S. Courts CM-ECF system (all districts)' },
   { domain: 'pacer.gov', notes: 'PACER public access' },
@@ -103,6 +109,20 @@ async function backfillMatters() {
   `));
 }
 
+async function seedDevMembers() {
+  for (const m of DEV_MEMBERS) {
+    await db
+      .insert(schema.workspaceMembers)
+      .values({
+        workspaceId: DEFAULT_WORKSPACE_ID,
+        email: m.email,
+        name: m.name,
+        role: m.role,
+      })
+      .onConflictDoNothing();
+  }
+}
+
 async function seedSenderPolicies() {
   let upserted = 0;
   for (const row of ALLOW) {
@@ -136,6 +156,7 @@ async function main() {
   await ensureDefaultWorkspace();
   await backfillWorkspaceIds();
   await backfillMatters();
+  await seedDevMembers();
   const upserted = await seedSenderPolicies();
 
   const [{ count: policyCount }] = await db.execute<{ count: number }>(

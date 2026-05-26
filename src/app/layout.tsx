@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import { Toaster } from "@/components/ui/sonner";
+import { Button } from "@/components/ui/button";
+import { signOut } from "@/auth";
+import { getWorkspaceCtx } from "@/lib/workspace/context";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,9 +18,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Court Notice Gateway",
+  title: "MatterPilot",
   description:
-    "Ingest PACER / CM-ECF notices, validate authenticity, classify, extract operative facts, and route to case timelines and tasks.",
+    "Multi-tenant legal AI matter platform. Multi-workflow ingest (court notices + contract playbooks), Office add-ins, matter-scoped memory, OIDC, auditable.",
 };
 
 const nav = [
@@ -27,11 +30,18 @@ const nav = [
   { href: "/metrics", label: "Metrics" },
 ];
 
-export default function RootLayout({
+async function signOutAction() {
+  "use server";
+  await signOut({ redirectTo: "/sign-in" });
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const ctx = await getWorkspaceCtx();
+
   return (
     <html
       lang="en"
@@ -41,11 +51,9 @@ export default function RootLayout({
         <div className="flex min-h-screen">
           <aside className="w-56 shrink-0 border-r bg-muted/30 px-4 py-6 flex flex-col gap-1">
             <div className="px-2 pb-6">
-              <div className="font-semibold tracking-tight">
-                Court Notice Gateway
-              </div>
+              <div className="font-semibold tracking-tight">MatterPilot</div>
               <div className="text-xs text-muted-foreground">
-                PACER / CM-ECF ingest
+                Legal AI matter platform
               </div>
             </div>
             <nav className="flex flex-col gap-1">
@@ -59,9 +67,33 @@ export default function RootLayout({
                 </Link>
               ))}
             </nav>
-            <div className="mt-auto px-2 pt-6 text-xs text-muted-foreground">
-              <div>Glade FDE application build</div>
-              <div className="font-mono">v0.1.0</div>
+            <div className="mt-auto px-2 pt-6">
+              {ctx ? (
+                <div className="space-y-2">
+                  <div className="text-xs">
+                    <div className="font-medium truncate" title={ctx.userEmail}>
+                      {ctx.userEmail}
+                    </div>
+                    <div className="text-muted-foreground capitalize">
+                      {ctx.role}
+                    </div>
+                  </div>
+                  <form action={signOutAction}>
+                    <Button
+                      type="submit"
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start px-2"
+                    >
+                      Sign out
+                    </Button>
+                  </form>
+                </div>
+              ) : null}
+              <div className="pt-4 text-xs text-muted-foreground">
+                <div>August FDE application</div>
+                <div className="font-mono">matterpilot v0.2.0</div>
+              </div>
             </div>
           </aside>
           <main className="flex-1 flex flex-col">{children}</main>
