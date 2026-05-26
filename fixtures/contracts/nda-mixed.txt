@@ -1,0 +1,43 @@
+MUTUAL NON-DISCLOSURE AGREEMENT
+
+This Mutual Non-Disclosure Agreement ("Agreement") is entered into as of June 1, 2026 by and between Helix Robotics, Inc., a Delaware corporation ("Helix"), and Pioneer Investments LLC, a Delaware limited liability company ("Pioneer"). Each is a "Party" and collectively the "Parties."
+
+1. PURPOSE
+
+The Parties wish to explore a potential strategic partnership and may exchange confidential information in connection with such exploration.
+
+2. CONFIDENTIAL INFORMATION
+
+"Confidential Information" means any non-public information disclosed by one Party (the "Disclosing Party") to the other (the "Receiving Party") that is identified as confidential at the time of disclosure or that the Receiving Party would reasonably understand to be confidential given its nature.
+
+3. OBLIGATIONS
+
+Each party agrees to hold the other party's Confidential Information in strict confidence and to use no less than reasonable care to prevent unauthorized disclosure. Each Party shall use Confidential Information solely to evaluate the potential partnership and shall not disclose it to any third party without prior written consent, except to employees and professional advisors with a need to know and confidentiality obligations no less restrictive than this Agreement.
+
+4. INTELLECTUAL PROPERTY
+
+The Disclosing Party retains all right, title, and interest in its Confidential Information. To the extent the Receiving Party develops any improvements or derivative works using or referencing the Disclosing Party's Confidential Information, Receiving Party shall promptly assign such improvements to the Disclosing Party, free of any liens or encumbrances. Nothing in this Agreement grants either Party any license to the other Party's pre-existing intellectual property.
+
+5. TERM
+
+The obligations of confidentiality and non-use under this Agreement shall continue in perpetuity with respect to trade secrets and for five (5) years after termination of discussions with respect to all other Confidential Information.
+
+6. GOVERNING LAW
+
+This Agreement shall be governed by the laws of the State of New York, without regard to its conflict of laws principles. The Parties consent to the exclusive jurisdiction of the state and federal courts located in New York County, New York.
+
+7. MISCELLANEOUS
+
+This Agreement constitutes the entire agreement between the Parties regarding its subject matter. No modification is binding unless in writing and signed by both Parties.
+
+HELIX ROBOTICS, INC.
+
+By: ___________________________
+Name: Priya Anand
+Title: VP, Legal
+
+PIONEER INVESTMENTS LLC
+
+By: ___________________________
+Name: Tom Whitaker
+Title: Director

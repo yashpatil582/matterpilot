@@ -1,0 +1,48 @@
+MASTER SERVICES AGREEMENT
+
+This Master Services Agreement ("Agreement") is entered into as of April 1, 2026, between Northstar Analytics, Inc. ("Vendor"), a Delaware corporation, and the customer identified in each Statement of Work ("Client"). This Agreement governs all services provided pursuant to any executed Statement of Work ("SOW").
+
+1. SERVICES
+
+Vendor shall provide the professional services described in each SOW. Each SOW shall be governed by the terms of this Agreement; in the event of conflict, the terms of the SOW shall prevail with respect to that engagement.
+
+2. FEES AND PAYMENT
+
+Vendor shall invoice Client monthly. Client shall pay each undisputed invoice within thirty (30) days of receipt (Net 30). Disputed amounts shall be raised in writing within fifteen (15) days of invoice receipt.
+
+3. TERM AND TERMINATION
+
+The initial term of this Agreement shall be one (1) year and shall automatically renew for successive one-year terms unless either party provides written notice of non-renewal at least sixty (60) days before the end of the then-current term. Either party may terminate this Agreement for convenience upon thirty (30) days' prior written notice to the other party. Either party may terminate this Agreement for material breach if the breaching party fails to cure such breach within thirty (30) days of written notice.
+
+4. LIMITATION OF LIABILITY
+
+Except for breaches of confidentiality and indemnification obligations, each party's total liability arising out of this Agreement shall not exceed the fees paid by Client to Vendor in the twelve (12) months preceding the claim. Neither party shall be liable for indirect, incidental, or consequential damages.
+
+5. INDEMNIFICATION
+
+Each party shall indemnify, defend, and hold harmless the other party against third-party claims arising from the indemnifying party's gross negligence or willful misconduct. The indemnification obligations shall be mutual and subject to the limitation of liability in Section 4, except where prohibited by law.
+
+6. GOVERNING LAW
+
+This Agreement shall be governed by the laws of the State of New York, without regard to its conflict of laws principles.
+
+7. INTELLECTUAL PROPERTY
+
+Client shall own all deliverables created by Vendor under each SOW upon full payment. Vendor retains ownership of its pre-existing tools, methodologies, and know-how, and grants Client a non-exclusive license to use such pre-existing IP solely to the extent necessary to use the deliverables.
+
+8. CONFIDENTIALITY
+
+Each party shall hold the other party's Confidential Information in strict confidence and shall use it only for purposes of performing this Agreement.
+
+NORTHSTAR ANALYTICS, INC.
+
+By: ___________________________
+Name: Alicia Tran
+Title: General Counsel
+
+CLIENT: ___________________________
+
+By: ___________________________
+Name:
+Title:
+Date:

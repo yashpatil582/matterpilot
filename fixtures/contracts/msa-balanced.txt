@@ -1,0 +1,48 @@
+MASTER SERVICES AGREEMENT
+
+This Master Services Agreement ("Agreement") is dated as of May 12, 2026, by and between Cobalt Engineering Group, LLC ("Vendor") and the entity executing the applicable Statement of Work ("Client").
+
+1. SERVICES
+
+Vendor shall perform the consulting services described in each mutually executed Statement of Work ("SOW").
+
+2. FEES AND PAYMENT
+
+Client shall pay all undisputed invoices within ninety (90) days of receipt. Vendor may charge a late fee of 1% per month on any past-due amount. Travel and out-of-pocket expenses must be pre-approved in writing by Client to be reimbursable.
+
+3. TERM AND TERMINATION
+
+The initial term is two (2) years from the Effective Date, automatically renewing for one (1) year terms unless either party provides written notice of non-renewal at least sixty (60) days before the end of the then-current term. Either party may terminate this Agreement for convenience upon thirty (30) days' prior written notice.
+
+4. LIMITATION OF LIABILITY
+
+Each party's aggregate liability under this Agreement shall not exceed the fees paid by Client to Vendor under the applicable SOW in the twelve (12) months prior to the event giving rise to the claim. Neither party shall be liable for lost profits or consequential damages.
+
+5. INDEMNIFICATION
+
+Vendor shall indemnify and hold harmless Client against third-party claims alleging that the deliverables, as delivered by Vendor, infringe a third party's intellectual property rights. Client shall promptly notify Vendor of any such claim and provide reasonable cooperation. The scope of indemnity is limited to direct damages and does not include claims arising from Client's modifications to the deliverables. Mutual indemnity covering Client's obligations is not addressed in this Agreement.
+
+6. GOVERNING LAW
+
+This Agreement is governed by the laws of the State of California, without regard to its conflict of laws principles.
+
+7. CONFIDENTIALITY
+
+Each party shall protect the other party's Confidential Information using the same degree of care it uses for its own confidential information of like importance, and no less than reasonable care.
+
+8. INTELLECTUAL PROPERTY
+
+Deliverables become Client's property upon final payment. Vendor retains rights in its pre-existing materials and grants Client a perpetual, non-exclusive license to use such materials as embedded in the deliverables.
+
+COBALT ENGINEERING GROUP, LLC
+
+By: ___________________________
+Name: Daniel Park
+Title: Managing Partner
+
+CLIENT: ___________________________
+
+By: ___________________________
+Name:
+Title:
+Date:
