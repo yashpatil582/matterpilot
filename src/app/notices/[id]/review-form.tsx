@@ -20,8 +20,6 @@ type FormState = {
   docketSummary: string;
 };
 
-const REVIEWER = 'paralegal@firm.example';
-
 function toDatetimeLocal(iso: string | null): string {
   if (!iso) return '';
   // Convert ISO to local datetime-local input format (YYYY-MM-DDTHH:MM)
@@ -117,7 +115,7 @@ export function ReviewForm({
     setError(null);
     setSavedMsg(null);
     startTransition(async () => {
-      const result = await saveNoticeEdits(noticeId, REVIEWER, buildFormData());
+      const result = await saveNoticeEdits(noticeId, buildFormData());
       if (result.ok) setSavedMsg('Saved.');
       else setError(result.error);
     });
@@ -127,12 +125,12 @@ export function ReviewForm({
     setError(null);
     setSavedMsg(null);
     startTransition(async () => {
-      const saved = await saveNoticeEdits(noticeId, REVIEWER, buildFormData());
+      const saved = await saveNoticeEdits(noticeId, buildFormData());
       if (!saved.ok) {
         setError(saved.error);
         return;
       }
-      const result = await approveNotice(noticeId, REVIEWER);
+      const result = await approveNotice(noticeId);
       if (!result.ok) {
         setError(result.error);
         return;
@@ -147,7 +145,7 @@ export function ReviewForm({
     const reason = window.prompt('Reason for rejecting this notice?') ?? '';
     if (!reason) return;
     startTransition(async () => {
-      const result = await rejectNotice(noticeId, REVIEWER, reason);
+      const result = await rejectNotice(noticeId, reason);
       if (result.ok) router.push('/');
       else setError(result.error);
     });
