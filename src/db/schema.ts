@@ -7,6 +7,7 @@ import {
   jsonb,
   real,
   boolean,
+  vector,
   pgEnum,
   index,
   uniqueIndex,
@@ -133,6 +134,52 @@ export const contractClauses = pgTable(
     index('contract_clauses_workspace_idx').on(t.workspaceId),
     index('contract_clauses_document_idx').on(t.documentId),
     index('contract_clauses_risk_idx').on(t.riskLevel),
+  ],
+);
+
+// Matter-scoped RAG. Embedding dimension is 1536 to match OpenAI's
+// text-embedding-3-small. Cosine distance (vector_cosine_ops) matches what
+// the retrieve module queries with `embedding <=> $1`.
+export const documentChunks = pgTable(
+  'document_chunks',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    workspaceId: uuid('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }),
+    matterId: uuid('matter_id').references(() => matters.id, { onDelete: 'set null' }),
+    documentId: uuid('document_id')
+      .references(() => documents.id, { onDelete: 'cascade' })
+      .notNull(),
+    ordinal: integer('ordinal').notNull(),
+    content: text('content').notNull(),
+    tokenCount: integer('token_count'),
+    embedding: vector('embedding', { dimensions: 1536 }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [
+    index('document_chunks_workspace_idx').on(t.workspaceId),
+    index('document_chunks_matter_idx').on(t.matterId),
+    index('document_chunks_document_idx').on(t.documentId),
+  ],
+);
+
+export const retrievalCitations = pgTable(
+  'retrieval_citations',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    workspaceId: uuid('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }),
+    matterId: uuid('matter_id').references(() => matters.id, { onDelete: 'set null' }),
+    queryId: uuid('query_id').notNull(),
+    chunkId: uuid('chunk_id')
+      .references(() => documentChunks.id, { onDelete: 'cascade' })
+      .notNull(),
+    score: real('score').notNull(),
+    reason: text('reason'),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [
+    index('retrieval_citations_workspace_idx').on(t.workspaceId),
+    index('retrieval_citations_matter_idx').on(t.matterId),
+    index('retrieval_citations_query_idx').on(t.queryId),
   ],
 );
 
@@ -294,6 +341,10 @@ export type Document = typeof documents.$inferSelect;
 export type NewDocument = typeof documents.$inferInsert;
 export type ContractClause = typeof contractClauses.$inferSelect;
 export type NewContractClause = typeof contractClauses.$inferInsert;
+export type DocumentChunk = typeof documentChunks.$inferSelect;
+export type NewDocumentChunk = typeof documentChunks.$inferInsert;
+export type RetrievalCitation = typeof retrievalCitations.$inferSelect;
+export type NewRetrievalCitation = typeof retrievalCitations.$inferInsert;
 export type Case = typeof cases.$inferSelect;
 export type NewCase = typeof cases.$inferInsert;
 export type Notice = typeof notices.$inferSelect;

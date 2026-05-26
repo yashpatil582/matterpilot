@@ -15,6 +15,7 @@ import {
 import { db, schema } from '@/db';
 import { requireWorkspaceCtx } from '@/lib/workspace/context';
 import { setLegalHold, setRetentionPolicy } from '../actions';
+import { AskMatterCard } from './ask-matter-card';
 
 export const dynamic = 'force-dynamic';
 
@@ -300,6 +301,8 @@ export default async function MatterDetailPage({
           )}
         </CardContent>
       </Card>
+
+      <AskMatterCard matterId={matter.id} />
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">

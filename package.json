@@ -9,6 +9,7 @@
     "addins:build": "tsx scripts/build-addins.ts",
     "start": "next start",
     "lint": "eslint",
+    "db:bootstrap": "tsx scripts/db-bootstrap.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",

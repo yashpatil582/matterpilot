@@ -4,6 +4,7 @@ import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { db, schema } from '@/db';
+import { retrieveForMatter, type RetrieveResult } from '@/lib/rag/retrieve';
 import { requireRole, requireWorkspaceCtx } from '@/lib/workspace/context';
 
 const RETENTION_VALUES = new Set(['30d', '90d', '1y', '7y', 'forever']);
@@ -131,6 +132,37 @@ export async function createMatter(formData: FormData) {
 
   revalidatePath('/matters');
   redirect(`/matters/${created.id}`);
+}
+
+export type AskMatterResult = RetrieveResult & {
+  query: string;
+};
+
+export async function askMatter(
+  matterId: string,
+  _prev: AskMatterResult | null,
+  formData: FormData,
+): Promise<AskMatterResult> {
+  const ctx = await requireWorkspaceCtx();
+  const query = String(formData.get('query') ?? '').trim();
+  if (!query) {
+    return { queryId: '', status: 'empty', chunks: [], query: '' };
+  }
+  // Verify the matter actually belongs to this workspace before any
+  // retrieval — defence-in-depth on top of the (workspaceId, matterId)
+  // filter inside retrieveForMatter itself.
+  const matter = await loadMatterScoped(ctx.workspaceId, matterId);
+  if (!matter) {
+    throw new Error('Matter not found in this workspace');
+  }
+
+  const result = await retrieveForMatter({
+    workspaceId: ctx.workspaceId,
+    matterId,
+    query,
+    k: 5,
+  });
+  return { ...result, query };
 }
 
 // Re-export the ctx require for use by other matter-bound server actions.

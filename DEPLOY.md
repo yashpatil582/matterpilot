@@ -51,7 +51,25 @@ vercel env add AUTH_GOOGLE_SECRET production
 # Dev credentials login — set to 'true' ONLY for a demo environment.
 # Leave unset in real production deployments.
 vercel env add AUTH_DEV_LOGIN production                 # value: true (demo only)
+
+# Matter-scoped RAG (optional — embeddings only; "Ask this matter" widget
+# shows a clear "RAG disabled" notice if missing).
+vercel env add OPENAI_API_KEY production
 ```
+
+## Database extensions
+
+Before the first `pnpm db:push`, enable the Postgres extensions the schema
+depends on (today: `pgvector` for RAG embeddings):
+
+```bash
+pnpm db:bootstrap                  # CREATE EXTENSION IF NOT EXISTS vector
+pnpm db:push                       # schema sync (now safe to reference vector(1536))
+pnpm db:seed                       # default workspace + members + matters + policies
+```
+
+Neon supports `CREATE EXTENSION vector` out of the box; bootstrap is
+idempotent and re-runs safely on every fresh DB.
 
 You can also paste them in via the Vercel dashboard (Project → Settings → Environment Variables) — same effect.
 

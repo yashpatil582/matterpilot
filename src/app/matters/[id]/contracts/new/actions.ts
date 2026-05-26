@@ -9,6 +9,7 @@ import { extractPdfText } from '@/lib/parsing';
 import { runWorkflow } from '@/lib/workflow/engine';
 import { contractReviewPack } from '@/lib/packs/contract-review';
 import { getPlaybook } from '@/lib/packs/contract-review/playbooks';
+import { indexDocument } from '@/lib/rag/index';
 import { requireRole, toPackContext } from '@/lib/workspace/context';
 
 export type UploadResult = { ok: false; error: string };
@@ -85,6 +86,20 @@ export async function uploadContract(
       toPackContext(ctx, { matterId }),
     );
     outcomeDocumentId = outcome.documentId;
+
+    // Best-effort matter-scoped RAG indexing. Embeddings are optional —
+    // if OPENAI_API_KEY isn't set the call no-ops. Failures here must not
+    // break the upload flow; the contract is already persisted.
+    try {
+      await indexDocument({
+        workspaceId: ctx.workspaceId,
+        matterId,
+        documentId: outcome.documentId,
+        text,
+      });
+    } catch (e) {
+      console.warn('RAG indexing failed (non-fatal):', e instanceof Error ? e.message : e);
+    }
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error during upload';
     console.error('Contract upload failed:', err);

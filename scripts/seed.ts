@@ -42,6 +42,12 @@ const BLOCK = [
   { domain: 'uscoorts.gov', notes: 'phishing: look-alike of uscourts.gov' },
 ];
 
+async function ensurePgVectorExtension() {
+  // documentChunks.embedding (vector(1536)) requires the pgvector extension.
+  // Idempotent; Neon supports `CREATE EXTENSION vector` out of the box.
+  await db.execute(sql`CREATE EXTENSION IF NOT EXISTS vector`);
+}
+
 async function ensureDefaultWorkspace() {
   await db
     .insert(schema.workspaces)
@@ -153,6 +159,7 @@ async function seedSenderPolicies() {
 }
 
 async function main() {
+  await ensurePgVectorExtension();
   await ensureDefaultWorkspace();
   await backfillWorkspaceIds();
   await backfillMatters();
