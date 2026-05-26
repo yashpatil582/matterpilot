@@ -80,6 +80,28 @@ async function loadTasks(workspaceId: string, matterId: string) {
     .limit(50);
 }
 
+async function loadContracts(workspaceId: string, matterId: string) {
+  return db
+    .select({
+      id: schema.documents.id,
+      name: schema.documents.name,
+      playbookId: schema.documents.playbookId,
+      reviewStatus: schema.documents.reviewStatus,
+      flaggedClauseCount: schema.documents.flaggedClauseCount,
+      createdAt: schema.documents.createdAt,
+    })
+    .from(schema.documents)
+    .where(
+      and(
+        eq(schema.documents.matterId, matterId),
+        eq(schema.documents.workspaceId, workspaceId),
+        eq(schema.documents.kind, 'contract'),
+      ),
+    )
+    .orderBy(desc(schema.documents.createdAt))
+    .limit(50);
+}
+
 async function loadAuditTrail(
   workspaceId: string,
   matterId: string,
@@ -125,9 +147,10 @@ export default async function MatterDetailPage({
   const matter = await loadMatter(ctx.workspaceId, id);
   if (!matter) notFound();
 
-  const [notices, tasks] = await Promise.all([
+  const [notices, tasks, contracts] = await Promise.all([
     loadNotices(ctx.workspaceId, matter.id),
     loadTasks(ctx.workspaceId, matter.id),
+    loadContracts(ctx.workspaceId, matter.id),
   ]);
   const audit = await loadAuditTrail(
     ctx.workspaceId,
@@ -268,6 +291,83 @@ export default async function MatterDetailPage({
                         day: 'numeric',
                         hour: '2-digit',
                         minute: '2-digit',
+                      })}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="text-base">
+            Contracts{' '}
+            <span className="text-xs text-muted-foreground">({contracts.length})</span>
+          </CardTitle>
+          <Link href={`/matters/${matter.id}/contracts/new`}>
+            <Button size="sm" variant="outline">
+              Review a contract
+            </Button>
+          </Link>
+        </CardHeader>
+        <CardContent>
+          {contracts.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              No contracts reviewed yet. Pack 2 (Contract Playbook Review)
+              runs on the same engine as the notice intake pipeline.
+            </p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Contract</TableHead>
+                  <TableHead>Playbook</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Flagged</TableHead>
+                  <TableHead className="text-right">Reviewed</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {contracts.map((c) => (
+                  <TableRow key={c.id}>
+                    <TableCell className="text-sm">
+                      <Link
+                        href={`/matters/${matter.id}/contracts/${c.id}`}
+                        className="hover:underline"
+                      >
+                        {c.name ?? 'Untitled'}
+                      </Link>
+                    </TableCell>
+                    <TableCell className="text-xs font-mono text-muted-foreground">
+                      {c.playbookId ?? '—'}
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          c.reviewStatus === 'needs_review'
+                            ? 'secondary'
+                            : c.reviewStatus === 'auto_approved'
+                              ? 'default'
+                              : c.reviewStatus === 'rejected'
+                                ? 'destructive'
+                                : 'outline'
+                        }
+                        className="capitalize"
+                      >
+                        {(c.reviewStatus ?? 'unknown').replace('_', ' ')}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right text-xs font-mono">
+                      {c.flaggedClauseCount ?? 0}
+                    </TableCell>
+                    <TableCell className="text-right text-xs text-muted-foreground">
+                      {new Date(c.createdAt).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
                       })}
                     </TableCell>
                   </TableRow>
