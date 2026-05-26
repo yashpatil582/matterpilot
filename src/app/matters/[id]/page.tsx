@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/table';
 import { db, schema } from '@/db';
 import { requireWorkspaceCtx } from '@/lib/workspace/context';
-import { removeLinkedDocument, setLegalHold, setRetentionPolicy } from '../actions';
+import { setLegalHold, setRetentionPolicy } from '../actions';
 import { AskMatterCard } from './ask-matter-card';
 
 export const dynamic = 'force-dynamic';
@@ -461,9 +461,10 @@ export default async function MatterDetailPage({
                       })}
                     </TableCell>
                     <TableCell className="text-right">
-                      <form action={removeLinkedDocument}>
-                        <input type="hidden" name="matterId" value={matter.id} />
-                        <input type="hidden" name="documentId" value={d.id} />
+                      <form
+                        action={`/matters/${matter.id}/documents/${d.id}/remove`}
+                        method="post"
+                      >
                         <Button
                           type="submit"
                           size="sm"
