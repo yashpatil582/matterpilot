@@ -29,6 +29,7 @@ const nav = [
   { href: "/review", label: "Review Queue" },
   { href: "/cases", label: "Cases" },
   { href: "/metrics", label: "Metrics" },
+  { href: "/admin", label: "Admin" },
 ];
 
 async function signOutAction() {
