@@ -20,5 +20,11 @@ export default defineConfig({
   },
   server: {
     port: 5101,
+    proxy: {
+      // In dev the Vite server serves the React shell at localhost:5101 and
+      // forwards /api/* to the Next.js dev server (localhost:3000) so the
+      // browser-side fetch('/api/addins/...') call works without CORS hops.
+      '/api': 'http://localhost:3000',
+    },
   },
 });

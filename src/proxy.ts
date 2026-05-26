@@ -20,10 +20,14 @@ export default auth((req) => {
   const isSignedIn = !!req.auth;
   const path = nextUrl.pathname;
 
-  // Public surfaces — always pass through.
+  // Public surfaces — always pass through. /api/addins/* uses its own
+  // header-based auth (see src/lib/addins/auth.ts) because Office task
+  // panes can't share session cookies with the main app.
   if (
     path.startsWith('/sign-in') ||
     path.startsWith('/api/auth') ||
+    path.startsWith('/api/addins') ||
+    path.startsWith('/addins') ||
     path.startsWith('/_next') ||
     path === '/favicon.ico'
   ) {
