@@ -71,6 +71,32 @@ pnpm db:seed                       # default workspace + members + matters + pol
 Neon supports `CREATE EXTENSION vector` out of the box; bootstrap is
 idempotent and re-runs safely on every fresh DB.
 
+## MCP server
+
+`pnpm mcp` launches the stdio MCP server for Claude Desktop. It is **not**
+deployed — each Claude Desktop user spawns their own local subprocess.
+Configure tenancy via the `MCP_WORKSPACE_ID` env var so the tools only
+return rows from that workspace; unset falls back to the seeded default
+workspace UUID.
+
+Example `claude_desktop_config.json` entry:
+
+```json
+{
+  "mcpServers": {
+    "matterpilot": {
+      "command": "pnpm",
+      "args": ["--dir", "/path/to/court-notice-gateway", "mcp"],
+      "env": {
+        "DATABASE_URL": "postgresql://…",
+        "MCP_WORKSPACE_ID": "00000000-0000-0000-0000-000000000001",
+        "OPENAI_API_KEY": "sk-…"
+      }
+    }
+  }
+}
+```
+
 You can also paste them in via the Vercel dashboard (Project → Settings → Environment Variables) — same effect.
 
 ## First deploy

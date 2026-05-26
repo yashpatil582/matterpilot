@@ -13,7 +13,10 @@
  * exploding.
  */
 
-import 'server-only';
+// No `import 'server-only'`: this module is also called from the MCP
+// stdio server (mcp/server.ts), which runs as a plain Node subprocess and
+// would crash on that throw. Server-only enforcement is moot here because
+// the module uses `db` which can't be reached from the client anyway.
 import { randomUUID } from 'node:crypto';
 import { and, eq, sql } from 'drizzle-orm';
 import { db, schema } from '@/db';

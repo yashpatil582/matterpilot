@@ -10,7 +10,9 @@
  * upload path still works.
  */
 
-import 'server-only';
+// No `import 'server-only'`: this module is also reachable from CLI
+// scripts (e.g. mcp/server.ts via retrieve.ts re-exports). DB access
+// makes client-side import a non-starter anyway.
 import { and, eq } from 'drizzle-orm';
 import { db, schema } from '@/db';
 import { chunkText } from './chunk';
