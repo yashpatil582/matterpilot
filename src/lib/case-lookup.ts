@@ -11,10 +11,13 @@ import { eq } from 'drizzle-orm';
 import { db, schema } from '@/db';
 import type { CaseNumberMatch } from './parsing/case-number';
 
-export async function findOrCreateCase(match: CaseNumberMatch): Promise<string> {
+export async function findOrCreateCase(
+  match: CaseNumberMatch,
+  workspaceId: string,
+): Promise<string> {
   await db
     .insert(schema.cases)
-    .values({ caseNumber: match.caseNumber, district: match.district })
+    .values({ workspaceId, caseNumber: match.caseNumber, district: match.district })
     .onConflictDoNothing({ target: schema.cases.caseNumber });
 
   const [row] = await db
