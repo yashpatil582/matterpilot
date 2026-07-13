@@ -4,11 +4,12 @@ A deployment-grade legal AI matter platform. Two workflow packs (court-notice
 intake and contract playbook review) run on the same engine; both packs land
 inside a matter that is workspace-scoped, audited, and retrieval-ready.
 
-Built as the take-home for the **[August](https://august.law) Forward Deployed
-Engineer** application. Evolved in place from a single-workflow ancestor
-(Court Notice Gateway) so the commit history shows the platform thesis —
-take one bespoke workflow that works, then turn it into reusable platform
-primitives.
+Evolved in place from a single-workflow ancestor (Court Notice Gateway)
+so the commit history shows the platform thesis — take one bespoke
+workflow that works, then turn it into reusable platform primitives.
+
+A hosted instance runs at <https://matterpilot.vercel.app> — it requires
+sign-in (no public demo credentials); run locally to explore.
 
 ## What's here
 
@@ -24,12 +25,12 @@ primitives.
 | **Matter-scoped RAG** | pgvector chunks + OpenAI embeddings. Cosine retrieval is `(workspace_id, matter_id)` scoped; every retrieval logs to `retrieval_citations`. | `src/lib/rag/` |
 | **Admin + audit** | Admin dashboard, audit CSV export, retention rollup, playbook viewer, member directory. Admin-only role gate. | `src/app/admin/`, `src/app/api/audit/export/` |
 | **MCP server** | Read-only stdio MCP server with 7 tools, `MCP_WORKSPACE_ID`-scoped. | `mcp/server.ts` |
-| **Tenancy guardrail** | Heuristic scan that fails CI when a Drizzle query against a tenant table lacks a `workspaceId` predicate. | `scripts/check-tenancy.ts` |
+| **Tenancy guardrail** | Heuristic scan (`pnpm tenancy:check`) that exits non-zero when a Drizzle query against a tenant table lacks a `workspaceId` predicate — built to run as a CI gate. | `scripts/check-tenancy.ts` |
 | **Eval harness** | Pack-aware dispatcher; runs both packs, writes a unified `eval-results.md`. | `eval/` |
 
 Origin: the entire `fixtures/notices/`, parsing layer, MCP read-only surface,
-and Day-7 eval numbers carry forward unchanged from the Court Notice Gateway
-v1 take-home. See the commits before the `matterpilot/main` branch for the
+and baseline eval numbers carry forward unchanged from Court Notice Gateway
+v1. See the commits before the `matterpilot/main` branch for the
 single-workflow ancestor.
 
 ## Architecture
@@ -133,7 +134,7 @@ deterministically.
 
 | Layer | Choice | Why |
 | --- | --- | --- |
-| App | Next.js 16 (App Router, **Proxy** convention) + React 19 | Single repo, server actions, easy Vercel deploy, matches August's stack. |
+| App | Next.js 16 (App Router, **Proxy** convention) + React 19 | Single repo, server actions, easy Vercel deploy. |
 | Monorepo | pnpm workspaces (`apps/*` + root) | Office add-ins are separate workspaces sharing the lockfile. |
 | DB | Postgres on Neon, pgvector for RAG | Free tier, serverless-friendly, native vector support. |
 | ORM | Drizzle | Type-safe, no codegen friction; `vector(1536)` first-class. |
@@ -268,9 +269,10 @@ each user threads their own `MCP_WORKSPACE_ID`.
 Every Drizzle query against a tenant table must filter on `workspaceId`.
 The guardrail at `scripts/check-tenancy.ts` (`pnpm tenancy:check`) is a
 fast regex-based scan that walks each `db.<select|insert|update|delete>`
-chain in `src/`, finds tenant-table references, and fails CI on any
-chain missing a `workspaceId` predicate. Caught 6 real leaks in pre-
-existing notice-review actions on its first run.
+chain in `src/`, finds tenant-table references, and exits non-zero on any
+chain missing a `workspaceId` predicate — built to drop into a CI pipeline
+as a merge gate. Caught 6 real leaks in pre-existing notice-review actions
+on its first run.
 
 The workspace-scoped e2e (`pnpm e2e:matterpilot`) is the second line:
 after running both packs against a fresh matter, it asserts
@@ -391,10 +393,9 @@ See **[DEPLOY.md](./DEPLOY.md)** for Vercel deploy steps + the
 
 ## Credits
 
-Built solo against August's public job description and product surface
-(august.law landing page, Personas + Live Assist announcements, Hughes
-Hubbard customer story). The Court Notice Gateway origin work was built
-against Glade's public bankruptcy practice page; that ingestion pipeline
-became Pack 1 in this evolution. Public source pack: Microsoft Graph
-docs, iManage Work REST docs, NetDocuments developer portal, Anthropic
-MCP spec, ABA Formal Opinion 512.
+Built solo. The domain research drew on public legal-tech product
+surfaces and customer stories, plus a public bankruptcy practice page
+that shaped the Court Notice Gateway origin work — that ingestion
+pipeline became Pack 1 in this evolution. Public source pack: Microsoft
+Graph docs, iManage Work REST docs, NetDocuments developer portal,
+Anthropic MCP spec, ABA Formal Opinion 512.
